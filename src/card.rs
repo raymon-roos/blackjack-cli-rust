@@ -14,22 +14,26 @@ impl Card {
     pub fn new(suit: Suit, rank: Rank) -> Card {
         Card { suit, rank }
     }
+
+    pub fn value(&self) -> u8 {
+        self.rank.value()
+    }
 }
 
 impl ToString for Card {
     fn to_string(&self) -> String {
-        format!("{} {}", self.suit.get_pip(), self.rank.get_value())
+        format!("{} {}", self.suit.pip(), self.rank.to_string())
     }
 }
 
 #[cfg(test)]
-mod card_test {
+mod test {
     use super::*;
 
     #[test]
     fn test_card_can_show() {
         let card: Card = Card::new(Suit::Hearts, Rank::Face(rank::Face::Queen));
 
-        assert_eq!("♥ 10", card.to_string());
+        assert_eq!("♥ Q", card.to_string());
     }
 }

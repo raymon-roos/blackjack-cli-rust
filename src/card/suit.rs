@@ -9,7 +9,8 @@ pub enum Suit {
 impl Suit {
     pub const VALUES: [Self; 4] = [Suit::Clubs, Suit::Diamonds, Suit::Hearts, Suit::Spades];
 
-    pub fn get_pip(&self) -> char {
+    /// In poker-style games, the symbol represinting the suit of a card is called a "pip"
+    pub fn pip(&self) -> char {
         match self {
             Suit::Clubs => '♣',
             Suit::Diamonds => '♦',
@@ -20,14 +21,14 @@ impl Suit {
 }
 
 #[cfg(test)]
-mod suit_test {
+mod test {
     use super::*;
 
     #[test]
     fn test_has_correct_pips() {
-        assert_eq!('♣', Suit::Clubs.get_pip());
-        assert_eq!('♦', Suit::Diamonds.get_pip());
-        assert_eq!('♥', Suit::Hearts.get_pip());
-        assert_eq!('♠', Suit::Spades.get_pip());
+        assert_eq!('♣', Suit::Clubs.pip());
+        assert_eq!('♦', Suit::Diamonds.pip());
+        assert_eq!('♥', Suit::Hearts.pip());
+        assert_eq!('♠', Suit::Spades.pip());
     }
 }

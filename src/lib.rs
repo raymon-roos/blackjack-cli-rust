@@ -1,5 +1,4 @@
 use crate::card::*;
-use crate::player::*;
 
 pub mod card;
 pub mod player;

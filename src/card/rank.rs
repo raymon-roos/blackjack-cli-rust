@@ -2,10 +2,10 @@ use std::str::FromStr;
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum Face {
-    Jack,
-    Queen,
-    King,
     Ace,
+    Jack,
+    King,
+    Queen,
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -21,13 +21,27 @@ pub enum RankError {
 }
 
 impl Rank {
-    pub fn get_value(&self) -> u8 {
+    pub fn value(&self) -> u8 {
         match self {
             Self::Number(value) => value.to_owned(),
             Self::Face(face) => match face {
                 Face::Ace => 11,
                 _ => 10,
             },
+        }
+    }
+}
+
+impl ToString for Rank {
+    fn to_string(&self) -> String {
+        match self {
+            Self::Number(value) => value.to_string(),
+            Self::Face(face) => String::from(match face {
+                Face::Ace => "A",
+                Face::Jack => "J",
+                Face::King => "K",
+                Face::Queen => "Q",
+            }),
         }
     }
 }
@@ -83,7 +97,7 @@ mod rank_test {
         let test_rank = "two".parse::<Rank>().unwrap();
 
         assert_eq!(test_rank, Rank::Number(2));
-        assert_eq!(test_rank.get_value(), 2);
+        assert_eq!(test_rank.value(), 2);
 
         assert!(Rank::try_from(11).is_err_and(|e| e
             == RankError::InvalidNumber(String::from(
