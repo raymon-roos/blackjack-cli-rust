@@ -1,3 +1,6 @@
+use core::fmt;
+use std::fmt::Display;
+
 #[derive(Debug)]
 pub enum Suit {
     Clubs,
@@ -17,6 +20,12 @@ impl Suit {
             Suit::Hearts => '♥',
             Suit::Spades => '♠',
         }
+    }
+}
+
+impl Display for Suit {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.pip())
     }
 }
 

@@ -4,6 +4,9 @@ pub mod suit;
 pub use crate::card::rank::*;
 pub use crate::card::suit::Suit;
 
+use core::fmt;
+use std::fmt::Display;
+
 #[derive(Debug)]
 pub struct Card {
     suit: Suit,
@@ -20,10 +23,14 @@ impl Card {
     }
 }
 
-impl ToString for Card {
-    fn to_string(&self) -> String {
-        format!("{} {}", self.suit.pip(), self.rank.to_string())
+impl Display for Card {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{} {}", self.suit, self.rank)
     }
+}
+
+trait Scoreable {
+    fn score() -> u8;
 }
 
 #[cfg(test)]

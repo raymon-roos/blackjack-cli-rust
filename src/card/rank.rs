@@ -1,4 +1,5 @@
-use std::str::FromStr;
+use core::fmt;
+use std::{fmt::Display, str::FromStr};
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum Face {
@@ -8,16 +9,31 @@ pub enum Face {
     Queen,
 }
 
-#[derive(Debug, PartialEq, Eq)]
-pub enum Rank {
-    Number(u8),
-    Face(Face),
+impl Display for Face {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Face::Ace => 'A',
+                Face::Jack => 'J',
+                Face::King => 'K',
+                Face::Queen => 'Q',
+            }
+        )
+    }
 }
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum RankError {
     InvalidString(String),
     InvalidNumber(String),
+}
+
+#[derive(Debug, PartialEq, Eq)]
+pub enum Rank {
+    Number(u8),
+    Face(Face),
 }
 
 impl Rank {
@@ -32,17 +48,16 @@ impl Rank {
     }
 }
 
-impl ToString for Rank {
-    fn to_string(&self) -> String {
-        match self {
-            Self::Number(value) => value.to_string(),
-            Self::Face(face) => String::from(match face {
-                Face::Ace => "A",
-                Face::Jack => "J",
-                Face::King => "K",
-                Face::Queen => "Q",
-            }),
-        }
+impl Display for Rank {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::Number(value) => value.to_string(),
+                Self::Face(face) => face.to_string(),
+            }
+        )
     }
 }
 

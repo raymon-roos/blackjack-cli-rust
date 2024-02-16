@@ -1,54 +1,55 @@
 pub mod hand;
 
 use self::hand::*;
+use super::card::*;
 
 #[derive(Debug)]
 pub struct Player {
     name: String,
     hands: Vec<Hand>,
-    score: u8,
 }
 
 impl Player {
     pub fn new(name: String) -> Player {
         Player {
-            name,
+            name: name.trim().to_string(),
             hands: vec![Hand::new(vec![])],
-            score: 0,
         }
     }
 
-    pub fn show_hands(&self) {
-        let hands: Vec<String> = self.hands.iter().map(|hand| hand.show()).collect();
+    pub fn take_card(&mut self, card: Card) {
+        self.hands
+            .first_mut()
+            .expect("every player has at least one hand")
+            .push(card);
+    }
 
-        for hand in self.hands.iter() {
-            println!("Player {} hand #{}: {}", self.name, hand.show());
-        }
+    pub fn show_hands(&self) -> String {
+        let all_cards = self
+            .hands
+            .iter()
+            .fold(format!("Player {} has:", self.name), |output, hand| {
+                format!("{} [{}]", output, hand)
+            });
+
+        dbg!(&all_cards);
+
+        all_cards
     }
 }
 
 #[cfg(test)]
 mod test {
-    use crate::card::*;
-
     use super::*;
 
     #[test]
     fn test_player_can_show() {
         let card: Card = Card::new(Suit::Hearts, Rank::Face(Face::Queen));
-        let player = Player::new(String::from("test"));
 
-        assert_eq!("♥ Q", player.show_hand());
-    }
+        let mut player = Player::new(String::from("test"));
+        player.take_card(card);
 
-    #[test]
-    fn test_hand_can_show() {
-        let card1: Card = Card::new(Suit::Hearts, Rank::Face(rank::Face::Queen));
-        let card2: Card = Card::new(Suit::Spades, Rank::Face(rank::Face::Ace));
-
-        let hand = Hand::new(vec![card1, card2]);
-
-        assert_eq!("♥ Q ♠ A", hand.show());
+        assert_eq!("Player test has: [♥ Q]", player.show_hands());
     }
 
     #[test]
@@ -57,7 +58,7 @@ mod test {
         hand.push(Card::new(Suit::Diamonds, Rank::Number(10)));
         hand.push(Card::new(Suit::Spades, Rank::Number(2)));
 
-        assert_eq!("♦ 10 ♠ 2", hand.show());
+        assert_eq!("♦ 10 ♠ 2", hand.to_string());
         assert_eq!(12, hand.score());
     }
 }

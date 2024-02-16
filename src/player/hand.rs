@@ -1,3 +1,6 @@
+use core::fmt;
+use std::fmt::Display;
+
 use crate::card::*;
 
 #[derive(Debug)]
@@ -22,13 +25,18 @@ impl Hand {
         self.score
     }
 
-    pub fn show(&self) -> String {
-        let cards: Vec<String> = self.cards.iter().map(|card| card.to_string()).collect();
-        let output = cards
-            .into_iter()
-            .reduce(|output, card_string| format!("{} {}", output, card_string));
+    fn show(&self) -> String {
+        self.cards
+            .iter()
+            .map(|card| card.to_string())
+            .reduce(|output, card| format!("{} {}", output, card))
+            .expect("Cant have hands without cards")
+    }
+}
 
-        output.expect("Cant have hands without cards")
+impl Display for Hand {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.show())
     }
 }
 
@@ -43,7 +51,7 @@ mod test {
 
         let hand = Hand::new(vec![card1, card2]);
 
-        assert_eq!("♥ Q ♠ A", hand.show());
+        assert_eq!("♥ Q ♠ A", hand.to_string());
     }
 
     #[test]
@@ -52,7 +60,7 @@ mod test {
         hand.push(Card::new(Suit::Diamonds, Rank::Number(10)));
         hand.push(Card::new(Suit::Spades, Rank::Number(2)));
 
-        assert_eq!("♦ 10 ♠ 2", hand.show());
+        assert_eq!("♦ 10 ♠ 2", hand.to_string());
         assert_eq!(12, hand.score());
     }
 }
